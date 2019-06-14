@@ -1,57 +1,68 @@
 import Link from "next/link";
+import { logoutUser } from "../lib/auth";
 
-const Layout = ({ title, children }) => (
-  <div className="root">
-    <nav className="navbar">
-      <span>
-        Welcome, <strong>Guest</strong>
-      </span>
+const Layout = ({ title, children, auth }) => {
+  const { user = {} } = auth || {};
 
-      <div>
-        <Link href="/">
-          <a>Home</a>
-        </Link>
-        <Link href="/profile">
-          <a>Profile</a>
-        </Link>
-        <button>Logout</button>
-        <Link href="/login">
-          <a>Login</a>
-        </Link>
-      </div>
-    </nav>
+  return (
+    <div className="root">
+      <nav className="navbar">
+        <span>
+          Welcome, <strong>{user.name || "Guest"}</strong>
+        </span>
 
-    <h1>{title}</h1>
-    {children}
+        <div>
+          <Link href="/">
+            <a>Home</a>
+          </Link>
 
-    <style jsx>{`
-      .root {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-      }
+          {user.email ? (
+            <React.Fragment>
+              <Link href="/profile">
+                <a>Profile</a>
+              </Link>
+              <button onClick={logoutUser}>Logout</button>
+            </React.Fragment>
+          ) : (
+            <Link href="/login">
+              <a>Login</a>
+            </Link>
+          )}
+        </div>
+      </nav>
 
-      .navbar {
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-      }
+      <h1>{title}</h1>
+      {children}
 
-      a {
-        margin-right: 0.5em;
-      }
+      <style jsx>{`
+        .root {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+        }
 
-      button {
-        text-decoration: underline;
-        padding: 0;
-        font: inherit;
-        cursor: pointer;
-        border-style: none;
-        color: rgb(0, 0, 258);
-      }
-    `}</style>
-  </div>
-);
+        .navbar {
+          width: 100%;
+          display: flex;
+          justify-content: space-around;
+        }
+
+        a {
+          margin-right: 0.5em;
+        }
+
+        button {
+          text-decoration: underline;
+          padding: 0;
+          font: inherit;
+          cursor: pointer;
+          border-style: none;
+          color: rgb(0, 0, 258);
+        }
+      `}</style>
+    </div>
+  );
+};
 
 export default Layout;
